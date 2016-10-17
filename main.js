@@ -1,5 +1,4 @@
 $(document).ready(function() {
-//$(document).on('knack-view-render.any', function (event, page) {
     
     // Detect if address, lat, and lng textboxes exist (find their labels)
     var addressLabel = $('.kn-input-label:contains("Address")'),
@@ -13,7 +12,7 @@ $(document).ready(function() {
         lngInput = $('#' + lngLabel.parent('label').attr('for')),
         defaultMapOptions = {
             center: {lat: 39.9500, lng: -75.1667},
-            zoom: 14
+            zoom: 13
         };
         
         // Disable lat & lng textboxes
@@ -40,7 +39,9 @@ $(document).ready(function() {
             
             if(input) {
                 // todo: enable loading indicator
-                geocoder.geocode({'address': input, 'componentRestrictions': {'locality': 'Philadelphia'}}, function(results, status) {
+                geocoder.geocode({'address': input, 'componentRestrictions': {
+                    'country': 'US'
+                }}, function(results, status) {
                     // todo: disable loading indicator
                     if(status == google.maps.GeocoderStatus.OK) {
                         map.setCenter(results[0].geometry.location);
@@ -49,7 +50,7 @@ $(document).ready(function() {
                         latInput.val(results[0].geometry.location.lat());
                         lngInput.val(results[0].geometry.location.lng());
                     } else {
-                        // todo: display error
+                        mapContainer.addClass('alert alert-warning').html('Google maps address lookup failed. Check API key and version in the relevant Javascript file.');
                     }
                 });
             }
